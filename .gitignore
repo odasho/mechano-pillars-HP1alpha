@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+
+# Notebooks / editors / OS
+.ipynb_checkpoints/
+.ruff_cache/
+.vscode/
+.idea/
+.DS_Store
+
+# Image data and outputs (not part of this repository; data/ keeps only the metadata JSONs)
+data/**/*_data_files/
+data/**/*_Ilastik_segmentation*/
+data/**/*_annotation_files_*/
+data/coordinate_files_*/
+data/process_image_results/
+data/proximity/
+analysis/actin_nucleus_localization/*.csv
+analysis/intensity_analysis/*.csv
+analysis/nucleus_table/*.csv
+analysis/nucleus_table/*.tsv
+analysis/condensate_table/*.csv
+*.ome.tif
+*.tif
+*.h5
+*.npy
+*.npz
+*.vsi
+*.czi
+
+# Notes for continuing work (not for publication)
+HANDOFF.md

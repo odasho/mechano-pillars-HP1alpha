@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=61.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mechcell"
+version = "1.0.0"
+description = "Segmentation and shape analysis of HeLa nuclei and HP1α condensates on micropillars"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+license = { file = "LICENSE" }
+# Versions pinned to the environment used to produce the published results.
+dependencies = [
+    "numpy==1.26.4",
+    "pandas==1.5.3",
+    "scipy==1.13.1",
+    "scikit-image==0.23.1",
+    "scikit-learn==1.4.2",
+    "h5py==3.16.0",
+    "tifffile==2023.2.28",
+    "aicsimageio==4.14.0",
+    "aicspylibczi==3.2.1",
+    "fsspec==2023.6.0",
+    "napari==0.5.6",
+    "napari-crop==0.1.9",
+    "pyclesperanto-prototype==0.24.6",
+    "simpleitk==2.5.6",
+    "pyradiomics==3.0.1",
+]
+
+[project.optional-dependencies]
+# Needed only to open the interactive napari viewer (show_viewer=True)
+viewer = ["pyqt5==5.15.11"]
+# Needed to run the notebooks in analysis/
+notebook = [
+    "jupyterlab==4.1.6",
+    "ipykernel==6.31.0",
+    "ipython==9.17.1",  # 9.18 breaks the notebook backend
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.uv]
+# pyradiomics 3.0.1 only ships as an sdist whose setup.py imports numpy
+extra-build-dependencies = { pyradiomics = ["numpy==1.26.4", "versioneer"] }
+
+[tool.black]
+line-length = 120
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"

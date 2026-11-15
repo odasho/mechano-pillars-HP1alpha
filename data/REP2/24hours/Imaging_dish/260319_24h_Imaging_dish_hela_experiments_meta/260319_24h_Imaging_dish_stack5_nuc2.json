@@ -1,0 +1,13 @@
+{
+    "image_file": "REP2/24hours/Imaging_dish/260319_24h_Imaging_dish_data_files/260319_HeLa_HP1aGFP_REP2_24h_Imaging_dish_Z_stack5.ome.tif",
+    "annotation_file_nucleus": "REP2/24hours/Imaging_dish/260319_24h_Imaging_dish_annotation_files_nucleus/260319_REP2_24h_Imaging_dish_stack5_nuc2_nucleus.npy",
+    "segmentation_file": "REP2/24hours/Imaging_dish/260319_24h_Imaging_dish_Ilastik_segmentation_2/260319_HeLa_HP1aGFP_REP2_24h_Imaging_dish_Z_stack5_CH2.ome_segmented.h5",
+    "cell_type": "HeLa",
+    "condition": "Imaging_dish",
+    "adherence_time": "24 hours",
+    "replicate_nr": "2",
+    "pillar_step": "N/A",
+    "nuc_nr": 2,
+    "annotation_file_actin": "REP2/24hours/Imaging_dish/260319_24h_Imaging_dish_annotation_files_actin/260319_REP2_24h_Imaging_dish_stack5_nuc2_actin.npy",
+    "segmentation_file_actin": "REP2/24hours/Imaging_dish/260319_24h_Imaging_dish_Ilastik_segmentation_actin/260319_HeLa_HP1aGFP_REP2_24h_Imaging_dish_Z_stack5_CH3.ome_segmented_actin.h5"
+}

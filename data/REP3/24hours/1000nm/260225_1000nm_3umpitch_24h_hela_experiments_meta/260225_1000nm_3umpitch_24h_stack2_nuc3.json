@@ -1,0 +1,13 @@
+{
+    "image_file": "REP3/24hours/1000nm/260225_1000nm_3umpitch_24h_data_files/260225_HeLa_HP1aGFP_REP3_24h_1000nm_3umpitch_Z_stack2.ome.tif",
+    "annotation_file_nucleus": "REP3/24hours/1000nm/260225_1000nm_3umpitch_24h_annotation_files_nucleus/260225_REP3_1000nm_3umpitch_24h_stack2_nuc3_nucleus.npy",
+    "segmentation_file": "REP3/24hours/1000nm/260225_1000nm_3umpitch_24h_Ilastik_segmentation_2/260225_HeLa_HP1aGFP_REP3_24h_1000nm_3umpitch_Z_stack2_CH2.ome_segmented.h5",
+    "cell_type": "HeLa",
+    "condition": "1000nm",
+    "adherence_time": "24 hours",
+    "replicate_nr": "3",
+    "pillar_step": "3um",
+    "nuc_nr": 3,
+    "annotation_file_actin": "REP3/24hours/1000nm/260225_1000nm_3umpitch_24h_annotation_files_actin/260225_REP3_1000nm_3umpitch_24h_stack2_nuc3_actin.npy",
+    "segmentation_file_actin": "REP3/24hours/1000nm/260225_1000nm_3umpitch_24h_Ilastik_segmentation_actin/260225_HeLa_HP1aGFP_REP3_24h_1000nm_3umpitch_Z_stack2_CH3.ome_segmented_actin.h5"
+}
