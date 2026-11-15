@@ -20,7 +20,7 @@ dependencies are pinned in `pyproject.toml`, and `uv.lock` records the exact ver
 every package.
 
 ```bash
-git clone <this repository>
+git clone https://github.com/odasho/mechano-pillars-HP1alpha.git
 cd mechano-pillars-HP1alpha
 uv sync --extra notebook --extra viewer   # Python 3.11, mechcell, Jupyter and PyQt5 (napari viewer)
 uv run jupyter lab
