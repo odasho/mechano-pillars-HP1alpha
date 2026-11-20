@@ -45,7 +45,8 @@ Our `mechcell` Python package contains the procedures for:
 
 ## Data structure
 
-The JSON files are organised by replicate, adherence time and substrate.
+The JSON files are organised by replicate, adherence time and substrate. The raw confocal Z-stacks, annotation files and coordinate files are available at DataverseNO: https://doi.org/10.18710/CIOCV3.
+
 
 ```
 data/
