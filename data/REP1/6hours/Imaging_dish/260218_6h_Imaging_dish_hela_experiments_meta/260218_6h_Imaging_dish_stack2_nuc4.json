@@ -1,9 +1,0 @@
-{
-    "image_file": "REP1/6hours/Imaging_dish/260218_6h_Imaging_dish_data_files/260218_HeLa_HP1aGFP_REP1_6h_Imaging_dish_Z_stack2.ome.tif",
-    "annotation_file_nucleus": "REP1/6hours/Imaging_dish/260218_6h_Imaging_dish_annotation_files_nucleus/260218_REP1_Imaging_dish_6h_stack2_nuc4_nucleus.npy",
-    "segmentation_file": "REP1/6hours/Imaging_dish/260218_6h_Imaging_dish_Ilastik_segmentation_2/260218_HeLa_HP1aGFP_REP1_6h_Imaging_dish_Z_stack2_CH2.ome_segmented.h5",
-    "cell_type": "HeLa",
-    "condition": "Imaging_dish",
-    "adherence_time": "6 hours",
-    "replicate_nr": "1"
-}

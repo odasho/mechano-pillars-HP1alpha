@@ -1,9 +1,0 @@
-{
-    "image_file": "REP1/6hours/1600nm/260112_1600nm_control_6h_data_files/260112_HeLa_HP1aGFP_REP1_6h_1600nm_control_Z_stack1.ome.tif",
-    "annotation_file_nucleus": "REP1/6hours/1600nm/260112_1600nm_control_6h_annotation_files_nucleus/260112_REP1_1600nm_control_6h_stack1_nuc3_nucleus.npy",
-    "segmentation_file": "REP1/6hours/1600nm/260112_1600nm_control_6h_Ilastik_segmentation_2/260112_HeLa_HP1aGFP_REP1_6h_1600nm_control_Z_stack1_CH2.ome_segmented.h5",
-    "cell_type": "HeLa",
-    "condition": "1600nm",
-    "adherence_time": "6 hours",
-    "replicate_nr": "1"
-}
