@@ -10,8 +10,11 @@ Segmentation and shape analysis of one annotated nucleus and its HP1α condensat
 3. Measure the nucleus (volume, axis lengths, sphericity, flatness) and the condensates
    (number, volumes, axis lengths, radial distance to the nucleus centroid and minimal
    distance to the nuclear periphery).
-4. Save voxel and physical coordinates of the nucleus, condensates, pillars and actin,
-   which are used by downstream analysis.
+4. Save the physical coordinates of the nucleus, its periphery, the condensates, the
+   pillars and actin, which are used by downstream analysis. They are written to
+   `<coordinate_files>/<object_type>/<time>/<height>/<pitch>/<image>_nuc<N>_..._physical_coords.npy|npz`.
+   Voxel coordinates can optionally be saved in the same layout under
+   `<coordinate_files>/voxel_coordinates/`.
 
 Coordinates and sizes follow the (z, y, x) axis order of the image stack. Physical
 units are µm.
@@ -105,9 +108,7 @@ class ProcessImage:
     are available afterwards as `df_img_results`, and the coordinate files are written
     to `coordinate_files`.
 
-    Paths in `metadata` are used as follows: `image_file` is resolved relative to
-    `data_dir`; `segmentation_file`, `annotation_file_nucleus` and the optional actin
-    entries are resolved relative to the current working directory.
+    All file paths in `metadata` are resolved relative to `data_dir`.
     """
 
     def __init__(
@@ -119,6 +120,7 @@ class ProcessImage:
         show_viewer=False,
         control=False,
         min_condensate_voxels=10,
+        save_voxel_coordinates=False,
     ):
         """
         Parameters
@@ -130,9 +132,11 @@ class ProcessImage:
             Optional keys: `annotation_file_actin`, `segmentation_file_actin` and
             `pillar_threshold`.
         data_dir : Path
-            Directory that `metadata["image_file"]` is relative to.
+            Directory that the file paths in `metadata` are relative to (the `data/`
+            folder of the repository, which holds the `REP<n>/` folders).
         coordinate_files : Path
-            Directory where the coordinate files are saved.
+            Directory where the coordinate files are saved, e.g.
+            `data_dir / "REP1" / "coordinate_files"`.
         meta_file : Path
             Path to the metadata JSON. The nucleus number in the coordinate file names
             is read from its name (`..._nuc<N>.json`).
@@ -142,6 +146,8 @@ class ProcessImage:
             If True, skip pillar detection (images without pillars).
         min_condensate_voxels : int, optional
             Condensates smaller than this number of voxels are discarded as noise.
+        save_voxel_coordinates : bool, optional
+            If True, also save voxel coordinates under `coordinate_files/voxel_coordinates/`.
         """
 
         if data_dir is None:
@@ -154,6 +160,8 @@ class ProcessImage:
             raise TypeError("control must be provided as True or False")
         if not isinstance(min_condensate_voxels, int) or min_condensate_voxels < 0:
             raise TypeError("min_condensate_voxels must be a non-negative integer")
+        if not isinstance(save_voxel_coordinates, bool):
+            raise TypeError("save_voxel_coordinates must be provided as True or False")
 
         self._metadata = dotdict(metadata)  # allows metadata.key; missing keys give None
         self._data_dir = data_dir
@@ -162,6 +170,7 @@ class ProcessImage:
         self._show_viewer = show_viewer
         self._control = control
         self._min_condensate_voxels = min_condensate_voxels
+        self._save_voxel_coordinates = save_voxel_coordinates
         self._results = Results()
         self._viewer_obj = None
 
@@ -321,15 +330,11 @@ class ProcessImage:
         Raises
         ------
         FileNotFoundError
-            If the image file does not exist.
+            If one of the files in `metadata` does not exist.
         """
 
         # Image stack: used for the voxel size, the pillar channel and the viewer
-        image_file = self._data_dir / self._metadata.image_file
-        if not image_file.exists():
-            raise FileNotFoundError(
-                f"Could not find '{image_file}'. Check if provided 'data_dir' and 'image_file' are correct."
-            )
+        image_file = self._data_path(self._metadata.image_file)
 
         image_stack = AICSImage(image_file)
         scale = image_stack.physical_pixel_sizes
@@ -355,7 +360,7 @@ class ProcessImage:
 
         # Ilastik segmentation of the HP1α channel. The nucleus is everything that is not
         # background (nucleoplasm, nucleoli and condensates).
-        with h5py.File(self._metadata.segmentation_file, "r") as f:
+        with h5py.File(self._data_path(self._metadata.segmentation_file), "r") as f:
             seg_map = np.squeeze(f["exported_data"][:])
         nucleus_mask = seg_map >= NUCLEOPLASM
         HP1a_mask = seg_map == HP1A_CONDENSATES
@@ -368,7 +373,7 @@ class ProcessImage:
         image_layer_ilastik_actin_fibers = None
         seg_file_actin = self._metadata.segmentation_file_actin
         if seg_file_actin:
-            with h5py.File(seg_file_actin, "r") as f:
+            with h5py.File(self._data_path(seg_file_actin), "r") as f:
                 seg_map_actin = np.squeeze(f["exported_data"][:])
             image_layer_ilastik_actin_foci = Image(
                 data=seg_map_actin == ACTIN_FOCI, scale=scaling_factors, name="Image_ilastik_actin_foci"
@@ -378,7 +383,7 @@ class ProcessImage:
             )
 
         # Nucleus annotation: polygon drawn around the nucleus in napari
-        annotation_nucleus = np.load(self._metadata.annotation_file_nucleus)
+        annotation_nucleus = np.load(self._data_path(self._metadata.annotation_file_nucleus))
         shapes_layer_nucleus = Shapes(data=annotation_nucleus, shape_type="polygon", name="Annotation_nucleus")
 
         # Actin annotation (optional): polygon drawn around the cell
@@ -389,7 +394,7 @@ class ProcessImage:
 
         actin_file = self._metadata.get("annotation_file_actin")
         if actin_file:
-            annotation_actin = np.load(actin_file)
+            annotation_actin = np.load(self._data_path(actin_file))
             shapes_layer_actin = Shapes(data=annotation_actin, shape_type="polygon", name="Annotation_actin")
 
             cropped_actin_foci, props_actin_foci, _ = crop_region(
@@ -644,6 +649,8 @@ class ProcessImage:
         periphery_coord_arr = np.array(find_coordinates(periphery))
         physical_periphery_arr = periphery_coord_arr * props_nuc["scale"] + props_nuc["translate"]
 
+        self._save_coordinates("nuclei_peripheries", periphery_coord_arr, physical_periphery_arr, "periphery")
+
         return periphery_coord_arr, physical_periphery_arr
 
     def _radial_distances(self, physical_centroid_nucleus, physical_centroid_conds_arr):
@@ -675,19 +682,34 @@ class ProcessImage:
 
     # ------------------------------------------------------------------ coordinate files
 
+    def _data_path(self, path):
+        """Resolve a path from `metadata` relative to `data_dir`."""
+
+        full_path = self._data_dir / path
+        if not full_path.exists():
+            raise FileNotFoundError(f"Could not find '{full_path}'. Check that 'data_dir' and the metadata are correct.")
+        return full_path
+
     def _save_coordinates(self, object_type, voxel_coords, physical_coords, file_label=""):
         """
-        Save voxel and physical coordinates of one type of object.
+        Save the physical (and optionally voxel) coordinates of one type of object in
+        `<coordinate_files>/<object_type>/<time>/<height>/<pitch>/`.
         """
 
-        # Image name without the .ome.tif extension
+        # Image name without the .ome.tif extension:
+        # <date>_HeLa_HP1aGFP_REP<n>_<time>_<height>_<pitch>_Z_stack<s>
         image_name = Path(self._metadata.image_file).with_suffix("").with_suffix("").name
+        time, height, pitch = image_name.split("_")[4:7]
         m = re.search(r"nuc(\d+)", Path(self._meta_file).stem)
         nuc_nr = m.group(1) if m else "unknown"
         prefix = f"{image_name}_nuc{nuc_nr}" + (f"_{file_label}" if file_label else "")
 
-        for kind, coords in (("voxel", voxel_coords), ("physical", physical_coords)):
-            out_dir = Path(self._coordinate_files) / f"{kind}_coordinates" / object_type
+        outputs = [("physical", physical_coords, Path(self._coordinate_files))]
+        if self._save_voxel_coordinates:
+            outputs.append(("voxel", voxel_coords, Path(self._coordinate_files) / "voxel_coordinates"))
+
+        for kind, coords, base_dir in outputs:
+            out_dir = base_dir / object_type / time / height / pitch
             out_dir.mkdir(parents=True, exist_ok=True)
             if isinstance(coords, list):
                 np.savez(out_dir / f"{prefix}_{kind}_coords.npz", *coords)

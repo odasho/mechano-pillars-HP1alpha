@@ -1,0 +1,13 @@
+{
+    "image_file": "REP2/6h/1600nm/260121_1600nm_3umpitch_6h_data_files/260121_HeLa_HP1aGFP_REP2_6h_1600nm_3umpitch_Z_stack7.ome.tif",
+    "annotation_file_nucleus": "REP2/6h/1600nm/260121_1600nm_3umpitch_6h_annotation_files_nucleus/260121_REP2_1600nm_3umpitch_6h_stack7_nuc2_nucleus.npy",
+    "segmentation_file": "REP2/6h/1600nm/260121_1600nm_3umpitch_6h_Ilastik_segmentation_2/260121_HeLa_HP1aGFP_REP2_6h_1600nm_3umpitch_Z_stack7_CH2.ome_segmented.h5",
+    "cell_type": "HeLa",
+    "condition": "1600nm",
+    "adherence_time": "6 hours",
+    "replicate_nr": "2",
+    "pillar_step": "3um",
+    "nuc_nr": 2,
+    "annotation_file_actin": "REP2/6h/1600nm/260121_1600nm_3umpitch_6h_annotation_files_actin/260121_REP2_1600nm_3umpitch_6h_stack7_nuc2_actin.npy",
+    "segmentation_file_actin": "REP2/6h/1600nm/260121_1600nm_3umpitch_6h_Ilastik_segmentation_actin/260121_HeLa_HP1aGFP_REP2_6h_1600nm_3umpitch_Z_stack7_CH3.ome_segmented_actin.h5"
+}

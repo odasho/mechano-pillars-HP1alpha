@@ -30,8 +30,7 @@ Our `mechcell` Python package contains the procedures for:
 
 * segmenting nuclei, HP1α condensates and pillars from the Ilastik segmentations. Pixel classification was done with [ilastik](https://www.ilastik.org/download) 1.4.0rc8.
 * extracting shape descriptors of the nuclei and condensates
-* saving the voxel and physical coordinates of nuclei, condensates, actin and pillars
-
+* saving the physical coordinates of nuclei, condensates, actin and pillars
 
 ## Repository structure
 
@@ -46,12 +45,12 @@ Our `mechcell` Python package contains the procedures for:
 
 ## Data structure
 
-The JSON files are organised by replicate, adherence time and substrate. 
+The JSON files are organised by replicate, adherence time and substrate.
 
 ```
 data/
 ├── REP1/                                         # REP1, REP2, REP3
-│   ├── 6hours/                                   # 6hours, 24hours
+│   ├── 6h/                                       # 6h, 24h: adherence time
 │   │   ├── 1000nm/                               # pillar height
 │   │   │   ├── 260108_1000nm_2umpitch_6h_hela_experiments_meta/
 │   │   │   │   ├── 260108_1000nm_2umpitch_6h_stack1_nuc1.json   # one JSON per nucleus
@@ -59,10 +58,8 @@ data/
 │   │   │   ├── 260108_1000nm_3umpitch_6h_hela_experiments_meta/
 │   │   │   ├── 260108_1000nm_4umpitch_6h_hela_experiments_meta/
 │   │   │   └── 260108_1000nm_control_6h_hela_experiments_meta/
-│   │   ├── 1600nm/                               # same layout as 1000nm/
-│   │   └── Imaging_dish/
-│   │       └── 260218_6h_Imaging_dish_hela_experiments_meta/
-│   └── 24hours/
+│   │   └── 1600nm/                               # same layout as 1000nm/
+│   └── 24h/
 ├── REP2/
 └── REP3/
 ```
